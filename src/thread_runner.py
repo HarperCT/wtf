@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 class ThreadRunner:
     def __init__(self, timeout: float, plugins: list[Plugin]):
-        self.timeout = timeout
+        self.timeout = timeout  # unused atm but maybe eventually...
         self.plugins = plugins
 
     def run_threads(self) -> list:
