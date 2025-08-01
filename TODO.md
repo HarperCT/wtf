@@ -1,0 +1,50 @@
+# TODO List for development
+## Core
+- Synchronus runner
+    - Maybe a python class that will handle that
+    - THREADDING!
+- command line running
+    - Basic cmd file that can be run
+- plugins active
+    - Activate plugin?
+        - Specified in command line
+        - Settings file l8r
+    - avaliable plugins
+        - Auto detect?
+        - other
+
+## Extra parts
+- JIRA AND PM BS because gay
+- unittest
+- Settings file
+    - Find type I want
+    - make it work
+- Service style
+    - Make it run indefinately
+    - Ditch (?) logs after x time
+        - i.e. rolling logger but with .zip files
+- Make a TUI
+    - use docopt to build a nice "terminal ui" 
+- Build
+    - Build in linux package formats
+        - Fedora
+        - Ubuntu
+    - Windows
+- UI
+    - Make a simple UI to display for selecting different plugin types
+    - Want something that will be able to select "overall" debugger
+        - i.e. memory
+        - i.e. cpu usage
+        - i.e. slow network
+- Plugins
+    - Make original plugins for a few basic operations
+        - Austin
+        - Journalctl
+        - Networking
+        - Top
+        - Tshark
+- github ci
+    - post build & deploy
+- Create readme for how to create new plugin
+- Make an API
+    - that can call each thing however they want
