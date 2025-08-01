@@ -2,23 +2,29 @@
 ## Core
 - Synchronus runner
     - Maybe a python class that will handle that
+    - THREADDING!
 - command line running
     - Basic cmd file that can be run
 - plugins active
-    - How to activate a plugin?
+    - Activate plugin?
+        - Specified in command line
+        - Settings file l8r
+    - avaliable plugins
         - Auto detect?
-        - Specified in command line?
-- unittest
-
+        - other
 
 ## Extra parts
+- JIRA AND PM BS because gay
+- unittest
 - Settings file
-    - Find type
+    - Find type I want
     - make it work
 - Service style
     - Make it run indefinately
     - Ditch (?) logs after x time
         - i.e. rolling logger but with .zip files
+- Make a TUI
+    - use docopt to build a nice "terminal ui" 
 - Build
     - Build in linux package formats
         - Fedora
@@ -40,3 +46,5 @@
 - github ci
     - post build & deploy
 - Create readme for how to create new plugin
+- Make an API
+    - that can call each thing however they want
