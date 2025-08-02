@@ -48,3 +48,5 @@
 - Create readme for how to create new plugin
 - Make an API
     - that can call each thing however they want
+- Rewrite in Rust
+    - Because rust is less resources and fast
