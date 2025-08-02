@@ -1,3 +1,3 @@
-sudo apt install python3
+sudo apt install python3 python3-pytest python3-pytest-cov
 
-export PYTHONPATH="$(pwd)/src"
+export PYTHONPATH="$(pwd)/python3-wtf/src"

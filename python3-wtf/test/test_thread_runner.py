@@ -1,7 +1,6 @@
 from thread_runner import ThreadRunner
 from plugins.plugin import Plugin
 import time
-import unittest
 
 class PluginStub(Plugin):
     def run(self):
@@ -13,9 +12,7 @@ class BadPluginStub(Plugin):
         time.sleep(0.5)
         raise Exception("Noob Plugin")
 
-class TestThreadRunner(unittest.TestCase):
-    def setUp(self):
-        pass
+class TestThreadRunner:
 
     def test_runs_multiple_threads(self):
         plugins = [PluginStub(), PluginStub(), PluginStub()]

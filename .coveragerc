@@ -1,0 +1,17 @@
+[run]
+branch = True
+source =
+    python3-wtf/src
+
+[report]
+omit =
+    */tests/*
+    */__init__.py
+    */venv/*
+    */.tox/*
+    */site-packages/*
+    */dist-packages/*
+show_missing = True
+
+[html]
+directory = htmlcov
