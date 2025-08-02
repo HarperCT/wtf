@@ -4,7 +4,7 @@ from pathlib import Path
 TOP_PATH = Path("/usr/bin/top")
 
 class TopPlugin(Plugin):
-    def __init__(param1, param2):
+    def __init__(self):
         pass
         
     def is_applicable(self) -> bool:
