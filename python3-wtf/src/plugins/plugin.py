@@ -1,11 +1,17 @@
-from abc import ABC, abstractmethod
+import abc
 
-class Plugin(ABC):
+class Plugin(abc.ABC):
 
-    def __init__(self):
+    @abc.abstractmethod
+    def is_applicable(self) -> bool:
+        """
+            Should run a check to see if this plugin can be used or not
+            i.e. file {path} exists
+        """
         pass
 
-    @abstractmethod
+
+    @abc.abstractmethod
     def run(self) -> str:
         """
             # TODO not returning str... something else but can't be None... i mean it could be i guess haven't thought what I want out of it yet
