@@ -1,16 +1,19 @@
-class TopPlugin():
+from plugins.plugin import Plugin
+from pathlib import Path
+
+TOP_PATH = Path("/usr/bin/top")
+
+class TopPlugin(Plugin):
     def __init__(param1, param2):
         pass
         
-    # def is_applicable():
-    #     ls /usr/bin/Top
-    #     return True
-    #     else return false
+    def is_applicable(self) -> bool:
+        return TOP_PATH.exists()
 
-    def check_something_else_out():
+    def check_something_else_out(self):
         pass
     
-    def run():
+    def run(self):
         # subprocess.run("/usr/bin/top param1 param2")
         pass
 
