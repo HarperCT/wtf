@@ -1,16 +1,5 @@
 from thread_runner import ThreadRunner
-from plugins.plugin import Plugin
-import time
-
-class PluginStub(Plugin):
-    def run(self):
-        time.sleep(0.5)
-        return "I am finished"
-
-class BadPluginStub(Plugin):
-    def run(self):
-        time.sleep(0.5)
-        raise Exception("Noob Plugin")
+from common_test_functions import PluginStub, BadPluginStub
 
 class TestThreadRunner:
 
