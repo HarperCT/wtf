@@ -1,4 +1,5 @@
 import abc
+import subprocess
 
 class Plugin(abc.ABC):
 
@@ -19,3 +20,26 @@ class Plugin(abc.ABC):
             Should save to the parent temp_dir made in the main runner
         """
         pass
+
+    def subprocess_helper(self, command: list[str], timeout: float):
+        try:
+            proc = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True  # decode bytes to str automatically
+            )
+
+            try:
+                # Wait for completion with timeout
+                stdout, stderr = proc.communicate(timeout=timeout)
+                return stdout, stderr, False
+
+            except subprocess.TimeoutExpired:
+                proc.kill()  # kill the process
+                # Still collect whatever output is available
+                stdout, stderr = proc.communicate()
+                return stdout, stderr, True
+
+        except Exception as e:
+            return '', f'[Exception running command: {e}]', True

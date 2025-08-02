@@ -83,5 +83,3 @@ def import_plugins(plugins_package_directory_path, base_class=None, create_insta
             # Instantiate / return type (depends on create_instance)
             return_values.append(value() if create_instance else value)
     return return_values
-
-PluginDetector()
