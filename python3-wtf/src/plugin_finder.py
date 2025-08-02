@@ -10,8 +10,8 @@ from inspect import isabstract, isclass
 
 logger = logging.getLogger(__name__)
 
-#TODO make this based off ???? looked @ a few different ways but nothing is standing out as best practice atm...
-TOP_DIR = Path("/home/user1/code/wtf/python3-wtf/src/")
+# WARNING: this expects a directory called plugins to live under it, moving it will cause no plugins to be detected... careful on changing project scructure
+TOP_DIR = Path(os.path.dirname(__file__))
 PLUGIN_DIR = TOP_DIR / Path("plugins")
 
 class PluginDetector:
@@ -83,3 +83,5 @@ def import_plugins(plugins_package_directory_path, base_class=None, create_insta
             # Instantiate / return type (depends on create_instance)
             return_values.append(value() if create_instance else value)
     return return_values
+
+PluginDetector()
