@@ -2,7 +2,7 @@ from plugins.plugin import Plugin
 import time
 
 class PluginStub(Plugin):
-    def run(self):
+    def run(self, _x, _y):
         time.sleep(0.5)
         return "I am finished"
 
@@ -11,7 +11,7 @@ class PluginStub(Plugin):
 
 
 class BadPluginStub(Plugin):
-    def run(self):
+    def run(self, _x, _y):
         time.sleep(0.5)
         raise Exception("Noob Plugin")
     
@@ -19,7 +19,7 @@ class BadPluginStub(Plugin):
         return True
 
 class UnapplicablePluginStub(Plugin):
-    def run(self):
+    def run(self, _x, _y):
         time.sleep(0.5)
         return "You should never hit this..."
 

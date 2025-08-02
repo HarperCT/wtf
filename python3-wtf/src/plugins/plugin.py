@@ -3,6 +3,9 @@ import subprocess
 
 class Plugin(abc.ABC):
 
+    def __init__(self):
+        pass
+
     @abc.abstractmethod
     def is_applicable(self) -> bool:
         """

@@ -23,10 +23,8 @@ class ThreadRunner:
                     item = future_results[future]
                     try:
                         result = future.result(timeout=self.timeout+10)
-                        logger.debug(f"{item.__name__} Received: {result}")
-                        results.append((item.__name__, result))
-                    except TimeoutError:
-                        logger.info(f"[TIMEOUT] {item.__name__} timed out, probably ok.")
+                        logger.debug(f"{type(item).__name__} Received: {result}")
+                        results.append((type(item).__name__, result))
                     except Exception as e:
                         logger.error(f"Item {item} generated an exception: {e}")
         return results

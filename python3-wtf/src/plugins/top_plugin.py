@@ -14,9 +14,6 @@ class TopPlugin(Plugin):
         
     def is_applicable(self) -> bool:
         return TOP_PATH.exists()
-
-    def parse_top_output(self):
-        pass
     
     def run(self, timeout: float):
         return self.subprocess_helper(self, TOP_COMMAND, timeout)
