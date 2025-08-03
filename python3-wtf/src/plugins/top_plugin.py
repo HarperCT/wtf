@@ -16,4 +16,4 @@ class TopPlugin(Plugin):
         return TOP_PATH.exists()
     
     def run(self, timeout: float):
-        return self.subprocess_helper(self, TOP_COMMAND, timeout)
+        return self.subprocess_helper(TOP_COMMAND, timeout)

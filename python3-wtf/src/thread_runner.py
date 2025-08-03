@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 class ThreadRunner:
     def __init__(self, timeout: float, plugins: list[Plugin]):
-        self.timeout = timeout  # unused atm but maybe eventually...
+        self.timeout = timeout
         self.plugins = plugins
 
     def run_threads(self) -> list[tuple[str, str]]:
@@ -15,9 +15,7 @@ class ThreadRunner:
         results = []
         with cf.ThreadPoolExecutor(max_workers=len(self.plugins)) as executor:
                 # get all Plugin.run and submit them to the executor
-                    # note need to be careful of agrs here... we can add them in the submit but I vote we handle all in the self. 
-                    # of the specific plugin... shouldn't need anything here
-                future_results = {executor.submit(plugin.run, plugin, self.timeout): plugin for plugin in self.plugins}
+                future_results = {executor.submit(plugin.run, self.timeout): plugin for plugin in self.plugins}
                 
                 for future in cf.as_completed(future_results, timeout=self.timeout+10):
                     item = future_results[future]

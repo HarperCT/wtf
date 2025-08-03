@@ -19,5 +19,5 @@ class TestTopPlugin(unittest.TestCase):
         with patch.object(self.plugin, "subprocess_helper", return_value=mock_output) as mock_helper:
             result = self.plugin.run(timeout=3.5)
             
-            mock_helper.assert_called_once_with(self.plugin, TOP_COMMAND, 3.5)
+            mock_helper.assert_called_once_with(TOP_COMMAND, 3.5)
             assert result == mock_output

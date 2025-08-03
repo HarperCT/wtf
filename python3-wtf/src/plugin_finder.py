@@ -33,7 +33,7 @@ class PluginDetector:
             self.applicable_plugins = []
             for plugin in self.plugins_detected:
                 if plugin().is_applicable():
-                    self.applicable_plugins.append(plugin)
+                    self.applicable_plugins.append(plugin())
             logger.info(f"Applicable plugins: {self.applicable_plugins}")
 
 
