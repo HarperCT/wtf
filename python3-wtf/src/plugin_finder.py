@@ -36,6 +36,31 @@ class PluginDetector:
                     self.applicable_plugins.append(plugin())
             logger.info(f"Applicable plugins: {self.applicable_plugins}")
 
+    def plug_in_plugin_args(self, plugins_args: list[tuple]):
+        for plugin_args in plugins_args:
+            if not plugin_args:
+                logger.info("You gave a plugin with no args? What are you doing silly duffer.")
+                continue
+            plugin_name = plugin_args[0].lower()
+            plugin_params = plugin_args[1:]
+
+            # Find plugin class whose name contains plugin_name (case-insensitive)
+            matched_instance = None
+            for instance in self.applicable_plugins:
+                cls_name = instance.__class__.__name__.lower()
+                if plugin_name in cls_name:
+                    matched_instance = instance
+                    break
+
+            if matched_instance is None:
+                logger.warning(f"No plugin instance found matching '{plugin_name}', skipping.")
+                continue
+
+            if matched_instance.is_configurable:
+                matched_instance.configure_args(*plugin_params)
+            else:
+                logger.debug("Looks like this plugin is not configurable... ignoring your commands given")
+
 
 def import_plugins(plugins_package_directory_path, base_class=None, create_instance=True, filter_abstract=True):
 

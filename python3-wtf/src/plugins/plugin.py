@@ -3,8 +3,12 @@ import subprocess
 
 class Plugin(abc.ABC):
 
+    is_multirunable: bool
+    is_configurable: bool
     def __init__(self):
-        pass
+        self.is_multirunable = False
+        self.is_configurable = False
+
 
     @abc.abstractmethod
     def is_applicable(self) -> bool:
@@ -23,6 +27,13 @@ class Plugin(abc.ABC):
             Should save to the parent temp_dir made in the main runner
         """
         pass
+
+    def configure_args(self, plugin_args: tuple) -> None:
+        """
+            Add plugin_args defined in cli (or elsewhere...) into the plugin,
+        """
+        NotImplementedError("Plugin does not support configuration. We should never have reached here. Please contanct maintainer")
+
 
     def subprocess_helper(self, command: list[str], timeout: float):
         try:
