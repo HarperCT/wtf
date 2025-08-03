@@ -7,10 +7,10 @@ class TestThreadRunner:
         plugins = [PluginStub(), PluginStub(), PluginStub()]
         runner = ThreadRunner(5, plugins)
         results = runner.run_threads()
-        assert results == ['I am finished', 'I am finished', 'I am finished']
+        assert results == [('PluginStub', 'I am finished'), ('PluginStub', 'I am finished'), ('PluginStub', 'I am finished')]
 
     def test_returns_non_failed_threads_even_if_one_fails(self):
         plugins = [PluginStub(), BadPluginStub(), PluginStub(), BadPluginStub()]
         runner = ThreadRunner(5, plugins)
         results = runner.run_threads()
-        assert results == ['I am finished', 'I am finished']
+        assert results == [('PluginStub', 'I am finished'), ('PluginStub', 'I am finished')]

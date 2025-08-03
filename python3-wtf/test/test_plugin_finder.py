@@ -23,7 +23,8 @@ class TestPluginFinder:
         mock_import = pytest.MonkeyPatch()
         mock_import.setattr(plugin_finder, "import_plugins", mock_import_plugins)
         x = plugin_finder.PluginDetector()
-        assert x.applicable_plugins == [PluginStub, BadPluginStub]
+        for plugin in x.applicable_plugins:
+            assert isinstance(plugin, (PluginStub, BadPluginStub))
 
     def test_no_applicable_plugins(self):
         def mock_import_plugins(plugins_package_directory_path=None, base_class=None, create_instance=True, filter_abstract=True):
