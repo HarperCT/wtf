@@ -7,24 +7,22 @@ from pathlib import Path
 
 def parse_plugins(plugins_raw_arguments):
     plugin_args = []
-    if plugins_raw_arguments:
-        for name, arg_str in plugins_raw_arguments:
-            parsed = None
-            try:
-                parsed = ast.literal_eval(arg_str)
-                if not isinstance(parsed, list):
-                    raise ValueError("Not a list")
-            except (ValueError, SyntaxError):
-                # Fall back to space-separated split
-                parsed = arg_str.strip().split()
-
+    for name, arg_str in plugins_raw_arguments:
+        parsed = None
+        try:
+            parsed = ast.literal_eval(arg_str)
             if not isinstance(parsed, list):
+                raise ValueError("Not a list")
+        except (ValueError, SyntaxError):
+            # Fall back to space-separated split — only if it's not a dict-like string
+            if arg_str.strip().startswith("{") or ":" in arg_str:
                 raise click.BadParameter(
                     f"Plugin args must be a valid list or a space-separated string, got: {arg_str}"
                 )
+            parsed = arg_str.strip().split()
 
-            plugin_args.append((name, *parsed))
-        return plugin_args
+        plugin_args.append((name, *parsed))
+    return plugin_args
 
 @click.command()
 @click.option(
@@ -51,9 +49,9 @@ def cli(timeout: click.IntRange, output_dir: click.Path, plugin: str | None = No
     """WheresTheFault CLI tool. Collect logs from all plugins with 1 simple command!"""
     click.echo("[WheresTheFault] Initializing WheresTheFault...")
     if plugin:
-        plugin_args = parse_plugins(plugin)
-    task = WheresTheFault(timeout=timeout, output_dir=Path(output_dir), plugin_args=plugin_args)
-    click.echo(f"[WheresTheFault] Running with timeout={timeout}, output_dir='{output_dir} and plugin_args={plugin_args}'")
+        plugin = parse_plugins(plugin)
+    task = WheresTheFault(timeout=timeout, output_dir=Path(output_dir), plugin_args=plugin)
+    click.echo(f"[WheresTheFault] Running with timeout={timeout}, output_dir='{output_dir}' and plugin_args={plugin}")
     task.main_runner()
     click.echo("[WheresTheFault] Done.")
 

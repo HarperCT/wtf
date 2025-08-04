@@ -14,7 +14,7 @@ class TestPluginFinder:
             return [PluginStub, BadPluginStub, UnapplicablePluginStub]
         mock_import = pytest.MonkeyPatch()
         mock_import.setattr(plugin_manager, "import_plugins", mock_import_plugins)
-        x = plugin_manager.PluginManager()
+        x = plugin_manager.PluginManager(None)
         assert x.plugins_detected == [PluginStub, BadPluginStub, UnapplicablePluginStub]
 
     def test_applicable_plugins(self):
@@ -22,7 +22,7 @@ class TestPluginFinder:
             return [PluginStub, BadPluginStub, UnapplicablePluginStub]
         mock_import = pytest.MonkeyPatch()
         mock_import.setattr(plugin_manager, "import_plugins", mock_import_plugins)
-        x = plugin_manager.PluginManager()
+        x = plugin_manager.PluginManager(None)
         for plugin in x.applicable_plugins:
             assert isinstance(plugin, (PluginStub, BadPluginStub))
 
@@ -31,7 +31,7 @@ class TestPluginFinder:
             return []
         mock_import = pytest.MonkeyPatch()
         mock_import.setattr(plugin_manager, "import_plugins", mock_import_plugins)
-        x = plugin_manager.PluginManager()
+        x = plugin_manager.PluginManager(None)
         assert x.applicable_plugins == []
 
 
