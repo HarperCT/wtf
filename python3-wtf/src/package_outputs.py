@@ -15,7 +15,12 @@ archive_name = f"{human_readable_datetime}_wtf_output"
 def archive_outputs(outputs: list[tuple[str, str]], destination: str = None):
     with tempfile.TemporaryDirectory() as temp_dir:
         for output in outputs:
-            with open(os.path.join(temp_dir, f"{output[0]}.txt"), 'w') as file:
+            file_to_write_path = os.path.join(temp_dir, f"{output[0]}.txt")
+            index = 0
+            while os.path.exists(file_to_write_path):
+                file_to_write_path = os.path.join(temp_dir, f"{output[0]}_{index}.txt")
+                index += 1
+            with open(os.path.join(file_to_write_path), 'w') as file:
                 top_out = output[1][0]
                 file.write(top_out)
         shutil.make_archive(archive_name, "zip", temp_dir)

@@ -1,6 +1,6 @@
 import logging
 import thread_runner
-import plugin_finder
+import plugin_manager
 import package_outputs
 from pathlib import Path
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s : %(message)s',
@@ -16,11 +16,10 @@ class WheresTheFault:
         self.plugin_args = plugin_args  # todo maybe type this nicer
 
     def main_runner(self):
-        plugin_detector = plugin_finder.PluginDetector()
+        plugin_detector = plugin_manager.PluginManager(self.plugin_args)
         if plugin_detector.applicable_plugins == []:
             Exception("No applicable plugins! Try download some!")
 
-        plugin_detector.plug_in_plugin_args(self.plugin_args)
         runner = thread_runner.ThreadRunner(timeout=self.timeout, plugins=plugin_detector.applicable_plugins)
         outputs = runner.run_threads()
 
