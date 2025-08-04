@@ -14,6 +14,7 @@ class TsharkPlugin(Plugin):
     def __init__(self):
         self.is_multirunable = True
         self.is_configurable = True
+        self.command = TSHARK_COMMAND
 
     def is_applicable(self) -> bool:
         group_ids = os.getgroups()  # current user's associated group ids
@@ -22,7 +23,8 @@ class TsharkPlugin(Plugin):
         return TSHARK_PATH.exists() and ("wireshark" in group_names or os.geteuid() == 0)
 
     def run(self, timeout: float):
-        return self.subprocess_helper(TSHARK_COMMAND, timeout)
+        return self.subprocess_helper(self.command, timeout)
 
     def configure_args(self, plugin_args: list[str]) -> None:
-        TSHARK_COMMAND.append(plugin_args)
+        self.command = TSHARK_COMMAND + plugin_args
+        logger.info(self.command)
