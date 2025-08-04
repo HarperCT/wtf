@@ -27,4 +27,3 @@ class TsharkPlugin(Plugin):
 
     def configure_args(self, plugin_args: list[str]) -> None:
         self.command = TSHARK_COMMAND + plugin_args
-        logger.info(self.command)
