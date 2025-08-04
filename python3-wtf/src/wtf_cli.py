@@ -1,8 +1,28 @@
 #!/bin/python3
 
 import click
+import ast
 from main import WheresTheFault
 from pathlib import Path
+
+def parse_plugins(plugins_raw_arguments):
+    plugin_args = []
+    for name, arg_str in plugins_raw_arguments:
+        parsed = None
+        try:
+            parsed = ast.literal_eval(arg_str)
+            if not isinstance(parsed, list):
+                raise ValueError("Not a list")
+        except (ValueError, SyntaxError):
+            # Fall back to space-separated split — only if it's not a dict-like string
+            if arg_str.strip().startswith("{") or ":" in arg_str:
+                raise click.BadParameter(
+                    f"Plugin args must be a valid list or a space-separated string, got: {arg_str}"
+                )
+            parsed = arg_str.strip().split()
+
+        plugin_args.append((name, *parsed))
+    return plugin_args
 
 @click.command()
 @click.option(
@@ -19,17 +39,19 @@ from pathlib import Path
 )
 @click.option(
     '-p', '--plugin',
+    nargs=2,
     multiple=True,
     type=str,
-    help='Specify a plugin and its arguments, e.g. --plugin tshark enpxx enpyyy. Can be used multiple times.'
+    help='Specify plugin and its args: either as a list string (e.g. plugin_name \'["arg1", "arg2"]\') or a space-separated string (e.g. plugin_name "arg1 arg2" or for single' \
+    'arg plugin: plugin_name arg)'
 )
 def cli(timeout: click.IntRange, output_dir: click.Path, plugin: str | None = None):
     """WheresTheFault CLI tool. Collect logs from all plugins with 1 simple command!"""
     click.echo("[WheresTheFault] Initializing WheresTheFault...")
     if plugin:
-        plugin = list[plugin]
+        plugin = parse_plugins(plugin)
     task = WheresTheFault(timeout=timeout, output_dir=Path(output_dir), plugin_args=plugin)
-    click.echo(f"[WheresTheFault] Running with timeout={timeout}, output_dir='{output_dir} and plugin_args={plugin}'")
+    click.echo(f"[WheresTheFault] Running with timeout={timeout}, output_dir='{output_dir}' and plugin_args={plugin}")
     task.main_runner()
     click.echo("[WheresTheFault] Done.")
 

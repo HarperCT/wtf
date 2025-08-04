@@ -9,9 +9,6 @@ TOP_COMMAND = ["/usr/bin/top", "-b"]
 
 class TopPlugin(Plugin):
 
-    def __init__(self):
-        pass
-        
     def is_applicable(self) -> bool:
         return TOP_PATH.exists()
     

@@ -5,7 +5,7 @@ import sys
 
 import pytest
 from plugins.plugin import Plugin
-import plugin_finder
+import plugin_manager
 from common_test_functions import PluginStub, BadPluginStub, UnapplicablePluginStub
 
 class TestPluginFinder:
@@ -13,16 +13,16 @@ class TestPluginFinder:
         def mock_import_plugins(plugins_package_directory_path=None, base_class=None, create_instance=True, filter_abstract=True):
             return [PluginStub, BadPluginStub, UnapplicablePluginStub]
         mock_import = pytest.MonkeyPatch()
-        mock_import.setattr(plugin_finder, "import_plugins", mock_import_plugins)
-        x = plugin_finder.PluginDetector()
+        mock_import.setattr(plugin_manager, "import_plugins", mock_import_plugins)
+        x = plugin_manager.PluginManager(None)
         assert x.plugins_detected == [PluginStub, BadPluginStub, UnapplicablePluginStub]
 
     def test_applicable_plugins(self):
         def mock_import_plugins(plugins_package_directory_path=None, base_class=None, create_instance=True, filter_abstract=True):
             return [PluginStub, BadPluginStub, UnapplicablePluginStub]
         mock_import = pytest.MonkeyPatch()
-        mock_import.setattr(plugin_finder, "import_plugins", mock_import_plugins)
-        x = plugin_finder.PluginDetector()
+        mock_import.setattr(plugin_manager, "import_plugins", mock_import_plugins)
+        x = plugin_manager.PluginManager(None)
         for plugin in x.applicable_plugins:
             assert isinstance(plugin, (PluginStub, BadPluginStub))
 
@@ -30,8 +30,8 @@ class TestPluginFinder:
         def mock_import_plugins(plugins_package_directory_path=None, base_class=None, create_instance=True, filter_abstract=True):
             return []
         mock_import = pytest.MonkeyPatch()
-        mock_import.setattr(plugin_finder, "import_plugins", mock_import_plugins)
-        x = plugin_finder.PluginDetector()
+        mock_import.setattr(plugin_manager, "import_plugins", mock_import_plugins)
+        x = plugin_manager.PluginManager(None)
         assert x.applicable_plugins == []
 
 
@@ -48,5 +48,5 @@ def test_import_plugins():
         # print(os.listdir(temp_dir))
         # sys.path.append(temp_file_path)
         # do test
-        plugins = plugin_finder.import_plugins(temp_dir, Plugin, True)
+        plugins = plugin_manager.import_plugins(temp_dir, Plugin, True)
         print(plugins)
