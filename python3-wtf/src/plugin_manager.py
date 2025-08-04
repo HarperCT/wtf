@@ -23,6 +23,7 @@ class PluginManager:
         self.applicable_plugins = []
         self.plugins_args = plugins_args
         self.fetch_plugins()
+        self.instantiate_plugins_with_no_args()
         if self.plugins_args:
             self.instantiate_plugins_from_args()
     
@@ -30,6 +31,7 @@ class PluginManager:
         self.plugins_detected = import_plugins(PLUGIN_DIR, base_class=Plugin, create_instance=False)
         logger.info(f"Found plugins {self.plugins_detected}")
 
+    def instantiate_plugins_with_no_args(self):
         # Instantiate zero-arg, non-configurable, non-multirunable plugins
         for plugin_cls in self.plugins_detected:
             instance = plugin_cls()
@@ -37,13 +39,12 @@ class PluginManager:
                 # Add default instance only if it's not already present
                 if not instance.is_configurable and not instance.is_multirunable:
                     self.applicable_plugins.append(instance)
-                    logger.info(f"Auto-added plugin: {instance.__class__.__name__}")
+                    logger.info(f"Added non-configurable plugin: {instance.__class__.__name__}")
+                elif instance.is_configurable and not self.plugins_args:
+                    logger.info(f"Not adding {instance.__class__.__name__} as it needs to be configured with plugin_args. Consider adding some to get this plugin")
 
     def instantiate_plugins_from_args(self):
         for plugin_args in self.plugins_args:
-            if not plugin_args:
-                logger.info("You gave a plugin with no args? What are you doing silly duffer.")
-                continue
             plugin_name = plugin_args[0].lower()
             plugin_params = plugin_args[1:]
 
@@ -65,6 +66,10 @@ class PluginManager:
                 logger.info(f"Plugin '{plugin_instance.__class__.__name__}' not applicable, skipping.")
                 continue
 
+            if not plugin_instance.is_configurable:
+                logger.warning(f"Plugin '{plugin_instance.__class__.__name__}' not configurable, you should remove it from your plugin_args, skipping.")
+                continue
+
             if not plugin_instance.is_multirunable:
                 already_exists = any(
                     isinstance(existing, plugin_instance)
@@ -76,7 +81,6 @@ class PluginManager:
 
             if plugin_instance.is_configurable:
                 plugin_instance.configure_args([*plugin_params])
-                # now need to handle if we can have multiple of the same plugin running at once...
             else:
                 if plugin_params:
                     logger.warning(f"Plugin '{plugin_name}' is not configurable but received args. Ignoring args.")
