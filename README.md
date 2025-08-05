@@ -1,6 +1,6 @@
 # WTF (Where's The Fault)
 
-**WTF** is your all-in-one debugging sidekick, designed to help developers of all skill levels collect logs, track outputs, and scream into the void—all with a single command.
+**WTF** is your all-in-one debugging sidekick, designed to help developers of all skill levels collect logs, track outputs, and scream into the void - all with a single command.
 This was designed for the intern out on site and when the senior says "get the logs and send them to me" you can run 1 simple command and it will collect them all in one .zip file!
 
 Currently built for Python 12.2.3
