@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 TSHARK_PATH = Path("/usr/bin/tshark")
-TSHARK_COMMAND = ["/usr/bin/tshark", "-i"]
+TSHARK_COMMAND = ["/usr/bin/tshark"]
 
 class TsharkPlugin(Plugin):
 
