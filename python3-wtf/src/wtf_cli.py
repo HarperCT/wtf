@@ -37,7 +37,7 @@ def show_help_plugins(ctx, param, value):
     ctx.exit()
 
 
-def parse_plugins(plugins_raw_arguments):
+def parse_plugins(plugins_raw_arguments: str) -> list[tuple[str, ...]]:
     plugin_args = []
     for name, arg_str in plugins_raw_arguments:
         parsed = None
@@ -56,7 +56,7 @@ def parse_plugins(plugins_raw_arguments):
         plugin_args.append((name, *parsed))
     return plugin_args
 
-def parse_plugins_from_json(plugin_dicts):
+def parse_plugins_from_json(plugin_dicts: dict) -> list[tuple[str, ...]]:
     plugin_args = []
     for plugin_entry in plugin_dicts:
         if not isinstance(plugin_entry, dict) or len(plugin_entry) != 1:

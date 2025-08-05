@@ -17,8 +17,9 @@ PLUGIN_DIR = TOP_DIR / Path("plugins")
 class PluginManager:
     plugins_detected: list[Plugin]
     applicable_plugins: list[Plugin]
+    plugins_args: list[tuple[str, ...]]
 
-    def __init__(self, plugins_args):
+    def __init__(self, plugins_args: list[tuple[str, ...]]):
         self.plugins_detected = []
         self.applicable_plugins = []
         self.plugins_args = plugins_args
@@ -60,10 +61,14 @@ class PluginManager:
                 logger.warning(f"No plugin instance found matching '{plugin_name}', skipping.")
                 continue
 
-            plugin_instance = matched_class()
+            plugin_instance: Plugin = matched_class()
+
+            if not isinstance(plugin_instance, Plugin):
+                logger.debug("I'll be shocked if we ever hit this, but typing is having a hissy... if we do report me!")
+                continue
 
             if not plugin_instance.is_applicable():
-                logger.info(f"Plugin '{plugin_instance.__class__.__name__}' not applicable, skipping.")
+                logger.warning(f"Plugin '{plugin_instance.__class__.__name__}' not applicable, skipping.")
                 continue
 
             if not plugin_instance.is_configurable:
@@ -76,7 +81,7 @@ class PluginManager:
                     for existing in self.applicable_plugins
                 )
                 if already_exists:
-                    logger.info(f"Plugin '{plugin_name}' is not multi-runnable and already instantiated. Skipping duplicate.")
+                    logger.warning(f"Plugin '{plugin_name}' is not multi-runnable and already instantiated. Skipping duplicate.")
                     continue
 
             if plugin_instance.is_configurable:

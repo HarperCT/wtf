@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from plugins.plugin import Plugin
 from plugins.tshark_plugin import TsharkPlugin
 
 
@@ -54,3 +53,8 @@ class TestTsharkPlugin(unittest.TestCase):
         result = self.plugin.run(timeout)
         mock_subprocess_helper.assert_called_once_with(self.plugin.command, timeout)
         assert result == "result"
+
+    def test_configure_args_appends_pased_in_args(self):
+        extra_args = ["-i", "enpxxx"]
+        self.plugin.configure_args(extra_args)
+        assert self.plugin.command == ["/usr/bin/tshark", "-i", "enpxxx"]

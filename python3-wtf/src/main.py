@@ -10,10 +10,10 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s : %(messa
 logger = logging.getLogger(__name__)
 
 class WheresTheFault:
-    def __init__(self, timeout: int, output_dir: Path, plugin_args: list[tuple]):
+    def __init__(self, timeout: int, output_dir: Path, plugin_args: list[tuple[str, ...]]):
         self.timeout = timeout
         self.output_dir = output_dir
-        self.plugin_args = plugin_args  # todo maybe type this nicer
+        self.plugin_args = plugin_args
 
     def main_runner(self):
         plugin_detector = plugin_manager.PluginManager(self.plugin_args)
