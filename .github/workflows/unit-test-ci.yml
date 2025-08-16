@@ -32,3 +32,13 @@ jobs:
           path: |
             .tox/py312/.coverage/html
             .tox/py312/.coverage/xml
+
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: '.tox/py312/.coverage/xml/coverage.xml'
+          badge: true
+          fail_below_min: true
+          format: markdown
+          output: both
+          thresholds: '50 80'
