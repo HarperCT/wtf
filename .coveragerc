@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = python3-wtf/src
+source = python3_wtf/src/python3_wtf/
 data_file = .coverage
 
 [report]

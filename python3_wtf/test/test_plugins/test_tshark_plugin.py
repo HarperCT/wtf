@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from plugins.tshark_plugin import TsharkPlugin
+from python3_wtf.plugins.tshark_plugin import TsharkPlugin
 
 
 class TestTsharkPlugin(unittest.TestCase):

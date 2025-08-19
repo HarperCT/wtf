@@ -4,7 +4,7 @@ import glob
 import logging
 
 from pathlib import Path
-from plugins.plugin import Plugin
+from python3_wtf.plugins.plugin import Plugin
 from inspect import isabstract, isclass
 
 
@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 # WARNING: this expects a directory called plugins to live under it, moving it will cause no plugins to be detected... careful on changing project scructure
 TOP_DIR = Path(os.path.dirname(__file__))
 PLUGIN_DIR = TOP_DIR / Path("plugins")
+BASE_DIR = Path("python3-wtf")
 
 class PluginManager:
     plugins_detected: list[Plugin]
@@ -95,7 +96,7 @@ class PluginManager:
 
 def import_plugins(plugins_package_directory_path, base_class=None, create_instance=True, filter_abstract=True):
 
-    plugins_package_name = os.path.basename(plugins_package_directory_path)
+    plugins_package_name = f"python3_wtf.{os.path.basename(plugins_package_directory_path)}"
     return_values: list[Plugin] = []
 
     # -----------------------------

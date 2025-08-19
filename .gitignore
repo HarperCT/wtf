@@ -3,6 +3,10 @@ __pycache__/
 
 # Environment
 .tox/
+dist/
+.venv/
+build/
+*.egg-info
 
 # Coverage
 .coverage

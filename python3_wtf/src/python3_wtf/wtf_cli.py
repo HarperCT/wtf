@@ -4,7 +4,7 @@ import click
 import ast
 import json
 
-from main import WheresTheFault
+from python3_wtf.main import WheresTheFault
 from pathlib import Path
 
 SETTINGS_EXAMPLE = {
