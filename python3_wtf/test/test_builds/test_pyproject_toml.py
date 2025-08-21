@@ -12,7 +12,6 @@ class TestPython3WTFBuild(unittest.TestCase):
         """Test that building the package produces .whl and .tar.gz files."""
         with tempfile.TemporaryDirectory() as tmpdir:
             build_dir = pathlib.Path(tmpdir)
-            # Run the build in the python3_wtf directory
             subprocess.run(
                 [sys.executable, "-m", "build", "--outdir", str(build_dir)],
                 check=True,
@@ -36,14 +35,11 @@ class TestPython3WTFBuild(unittest.TestCase):
             wheel = next(build_dir.glob("*.whl"), None)
             self.assertIsNotNone(wheel, "No wheel file found for installation test")
 
-            # Create a temporary venv
             venv.create(venv_dir, with_pip=True)
             python_bin = pathlib.Path(venv_dir) / "bin" / "python"
 
-            # Install the wheel into the venv
             subprocess.run([python_bin, "-m", "pip", "install", str(wheel)], check=True)
 
-            # Check import
             subprocess.run(
                 [python_bin, "-c", "import python3_wtf"],
                 check=True
@@ -61,12 +57,18 @@ class TestPython3WTFBuild(unittest.TestCase):
             wheel = next(build_dir.glob("*.whl"), None)
             self.assertIsNotNone(wheel, "No wheel file found for CLI test")
 
-            # Create a temporary venv
             venv.create(venv_dir, with_pip=True)
             python_bin = pathlib.Path(venv_dir) / "bin" / "python"
 
-            # Install the wheel
             subprocess.run([python_bin, "-m", "pip", "install", str(wheel)], check=True)
 
-            # Run the CLI
-            subprocess.run([python_bin, "-m", "python3_wtf.wtf_cli", "--help"], check=True)
+            result = subprocess.run(
+                [python_bin, "-m", "python3_wtf.wtf_cli", "--help"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+
+            self.assertIn("usage", result.stdout.lower())
+            self.assertIn("wheresthefault cli tool", result.stdout.lower())
+            self.assertEqual(result.stderr.strip(), "")
