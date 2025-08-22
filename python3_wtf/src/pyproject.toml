@@ -10,7 +10,7 @@ authors = [
     {name="Harper Thurlow", email="harper.thurlow@gmail.com"},
     {name="Nick McGuffin", email="nicholas.mcguffin.developer@gmail.com"}
 ]
-license = {text="MIT"}
+license = "MIT"
 keywords = ["debugging", "fault finding", "errors"]
 readme = "README.md"
 requires-python = ">=3.12"
