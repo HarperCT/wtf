@@ -29,10 +29,14 @@ def test_archive_outputs_handles_missing_destination():
     assert os.path.exists(zip_filename)
     os.remove(zip_filename)
 
+
 def test_archive_outputs_creates_zip_file_with_indexed_files():
     # Sample input: list of (filename, [content])
-    outputs = [("test1", ["line 1\nline 2"]), ("test1", ["line 1\nline 2"]), ("test2", ["line A\nline B"])]
-
+    outputs = [
+        ("test1", ["line 1\nline 2"]),
+        ("test1", ["line 1\nline 2"]),
+        ("test2", ["line A\nline B"]),
+    ]
     with tempfile.TemporaryDirectory() as temp_output_dir:
         archive_outputs(outputs, destination=temp_output_dir)
         zip_path = os.path.join(temp_output_dir, f"{archive_name}.zip")

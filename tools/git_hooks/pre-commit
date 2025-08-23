@@ -1,0 +1,22 @@
+#!/bin/sh
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+# Get all staged Python files
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$')
+
+if [ -z "$FILES" ]; then
+    exit 0
+fi
+
+echo "Running flake8 on staged Python files..."
+flake8 $FILES
+
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo "Commit aborted due to flake8 errors above."
+    exit 1
+fi
+
+exit 0

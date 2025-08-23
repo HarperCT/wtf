@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 TSHARK_PATH = Path("/usr/bin/tshark")
 TSHARK_COMMAND = ["/usr/bin/tshark"]
 
+
 class TsharkPlugin(Plugin):
 
     def __init__(self):
@@ -20,7 +21,8 @@ class TsharkPlugin(Plugin):
         group_ids = os.getgroups()  # current user's associated group ids
         group_names = [grp.getgrgid(gid).gr_name for gid in group_ids]
 
-        return TSHARK_PATH.exists() and ("wireshark" in group_names or os.geteuid() == 0)
+        return TSHARK_PATH.exists() and \
+            ("wireshark" in group_names or os.geteuid() == 0)
 
     def run(self, timeout: float):
         return self.subprocess_helper(self.command, timeout)

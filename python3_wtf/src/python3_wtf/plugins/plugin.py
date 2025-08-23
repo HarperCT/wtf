@@ -1,14 +1,14 @@
 import abc
 import subprocess
 
-class Plugin(abc.ABC):
 
+class Plugin(abc.ABC):
     is_multirunable: bool
     is_configurable: bool
+
     def __init__(self):
         self.is_multirunable = False
         self.is_configurable = False
-
 
     @abc.abstractmethod
     def is_applicable(self) -> bool:
@@ -18,12 +18,13 @@ class Plugin(abc.ABC):
         """
         pass
 
-
     @abc.abstractmethod
     def run(self) -> str:
         """
-            # TODO not returning str... something else but can't be None... i mean it could be i guess haven't thought what I want out of it yet
-            Expectation is that this will run the command and it will save to an output file
+            # TODO not returning str... something else but can't
+            be None... i mean it could be i guess haven't thought
+            what I want out of it yet. Expectation is that this will
+            run the command and it will save to an output file
             Should save to the parent temp_dir made in the main runner
         """
         pass
@@ -32,8 +33,9 @@ class Plugin(abc.ABC):
         """
             Add plugin_args defined in cli (or elsewhere...) into the plugin,
         """
-        NotImplementedError("Plugin does not support configuration. We should never have reached here. Please contanct maintainer")
-
+        NotImplementedError("Plugin does not support configuration. \
+                            We should never have reached here. \
+                            Please contanct maintainer")
 
     def subprocess_helper(self, command: list[str], timeout: float):
         try:

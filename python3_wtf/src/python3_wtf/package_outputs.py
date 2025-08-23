@@ -18,7 +18,8 @@ def archive_outputs(outputs: list[tuple[str, str]], destination: str = None):
             file_to_write_path = os.path.join(temp_dir, f"{output[0]}.txt")
             index = 0
             while os.path.exists(file_to_write_path):
-                file_to_write_path = os.path.join(temp_dir, f"{output[0]}_{index}.txt")
+                file_to_write_path = os.path.join(temp_dir,
+                                                  f"{output[0]}_{index}.txt")
                 index += 1
             with open(os.path.join(file_to_write_path), 'w') as file:
                 top_out = output[1][0]
