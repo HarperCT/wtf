@@ -1,5 +1,0 @@
-[flake8]
-exlude =[".venv", "build", "dist"]
-max-line-length = 88
-per-file-ignores =
-    wtf_cli.py: E501

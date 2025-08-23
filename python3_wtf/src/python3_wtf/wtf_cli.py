@@ -144,13 +144,17 @@ def cli(
         plugin_args = plugin or config.get("plugins", None)
     except KeyError:
         raise click.UsageError(
-            "[WheresTheFault] Missing required parameters: 'timeout' and/or 'output_dir' "
+            "[WheresTheFault] Missing required parameters: "
+            "'timeout' and/or 'output_dir' "
             "must be set either in the CLI or .json."
         )
 
     if plugin and isinstance(plugin, tuple):
         plugin_args = parse_plugins(plugin)
-    elif isinstance(plugin_args, list) and all(isinstance(plugin, dict) for plugin in plugin_args):
+    elif (
+        isinstance(plugin_args, list)
+        and all(isinstance(plugin, dict) for plugin in plugin_args)
+    ):
         plugin_args = parse_plugins_from_json(plugin_args)
     else:
         click.echo("[WheresTheFault] No plugins provided")
