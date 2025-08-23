@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from click.testing import CliRunner
 from pathlib import Path
-from wtf_cli import cli
+from python3_wtf.wtf_cli import cli
 
 TEST_SETTINGS_FILE = {
     "timeout": 5,
@@ -18,7 +18,7 @@ TEST_SETTINGS_FILE = {
 class TestCli(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
-        patcher = patch("wtf_cli.WheresTheFault")
+        patcher = patch("python3_wtf.wtf_cli.WheresTheFault")
         self.mock_class = patcher.start()
         self.addCleanup(patcher.stop)
         self.mock_instance = self.mock_class.return_value

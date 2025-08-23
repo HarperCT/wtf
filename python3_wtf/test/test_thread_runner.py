@@ -1,4 +1,4 @@
-from thread_runner import ThreadRunner
+from python3_wtf.thread_runner import ThreadRunner
 from common_test_functions import PluginStub, BadPluginStub
 
 class TestThreadRunner:

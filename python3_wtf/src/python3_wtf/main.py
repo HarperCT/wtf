@@ -1,7 +1,7 @@
 import logging
-import thread_runner
-import plugin_manager
-import package_outputs
+from python3_wtf.thread_runner import ThreadRunner
+from python3_wtf.plugin_manager import PluginManager
+from python3_wtf.package_outputs import archive_outputs
 from pathlib import Path
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s : %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -16,12 +16,12 @@ class WheresTheFault:
         self.plugin_args = plugin_args
 
     def main_runner(self):
-        plugin_detector = plugin_manager.PluginManager(self.plugin_args)
+        plugin_detector = PluginManager(self.plugin_args)
         if plugin_detector.applicable_plugins == []:
             Exception("No applicable plugins! Try download some!")
 
-        runner = thread_runner.ThreadRunner(timeout=self.timeout, plugins=plugin_detector.applicable_plugins)
+        runner = ThreadRunner(timeout=self.timeout, plugins=plugin_detector.applicable_plugins)
         outputs = runner.run_threads()
 
-        package_outputs.archive_outputs(outputs, "/tmp")
+        archive_outputs(outputs, "/tmp")
 

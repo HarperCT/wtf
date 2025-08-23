@@ -1,5 +1,5 @@
 import concurrent.futures as cf
-from plugins.plugin import Plugin
+from python3_wtf.plugins.plugin import Plugin
 import logging
 logger = logging.getLogger(__name__)
 

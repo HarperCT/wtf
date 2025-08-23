@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools >= 77.0.3", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python3_wtf"
+dynamic = ["version"]
+description = "WTF (Where's The Fault) - the all-in-one debugging sidekick"
+authors = [
+    {name="Harper Thurlow", email="harper.thurlow@gmail.com"},
+    {name="Nick McGuffin", email="nicholas.mcguffin.developer@gmail.com"}
+]
+license = "MIT"
+keywords = ["debugging", "fault finding", "errors"]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.0"
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.12"
+]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "node-and-date"
+root = "../.."
+
+[project.urls]
+Repository = "https://github.com/HarperCT/wtf"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov"
+]
+
+[tool.setuptools]
+packages = ["python3_wtf", "python3_wtf.plugins"]
+
+
+[project.scripts]
+wtf-cli = "python3_wtf.wtf_cli:cli"
+

@@ -23,7 +23,18 @@ TODO make a TUI
 TODO make a UI
 
 ## How to build
-TODO how to build package
+### Manual
+1. Use python3 -m build from python3_wtf/src/directory (wherepyproject.toml` lives).
+2. dist/ folder will be created, containing .tar.gz and .whl packages.
+3. Activate virtual env - source {venv_name}/bin/activate
+4. Run pip install path/to/dist/python3_wtf-{version}.{hash}.tar.gz
+5. You can now use wtf-cli in the virtual env cli
+
+### Using Scripts
+1. Navigate to {project_root_dir}/tools
+2. Run ./linux_setup.sh
+3. Run ./build.sh
+4. The newly built packages will be stored in {project_root_dir}/python3_wtf/src/dist/
 
 ## How to install
 TODO deploy to pypi to easily install (i.e. pip install wtf)

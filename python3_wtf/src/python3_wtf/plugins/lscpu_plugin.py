@@ -1,4 +1,4 @@
-from plugins.plugin import Plugin
+from python3_wtf.plugins.plugin import Plugin
 from pathlib import Path
 import logging
 

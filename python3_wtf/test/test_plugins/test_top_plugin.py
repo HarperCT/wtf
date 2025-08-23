@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from plugins.top_plugin import TopPlugin, TOP_COMMAND
+from python3_wtf.plugins.top_plugin import TopPlugin, TOP_COMMAND
 from pathlib import Path
 
 class TestTopPlugin(unittest.TestCase):

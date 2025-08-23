@@ -2,7 +2,7 @@ import os
 import zipfile
 import tempfile
 
-from package_outputs import archive_outputs, archive_name
+from python3_wtf.package_outputs import archive_outputs, archive_name
 
 
 def test_archive_outputs_creates_zip_file_and_moves_it():
