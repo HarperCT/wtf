@@ -1,6 +1,7 @@
 from python3_wtf.plugins.plugin import Plugin
 import time
 
+
 class PluginStub(Plugin):
     def run(self, timeout):
         time.sleep(0.5)
@@ -14,9 +15,10 @@ class BadPluginStub(Plugin):
     def run(self, timeout):
         time.sleep(0.5)
         raise Exception("Noob Plugin")
-    
+
     def is_applicable(self):
         return True
+
 
 class UnapplicablePluginStub(Plugin):
     def run(self, timeout):

@@ -1,36 +1,63 @@
 import tempfile
 import os
 import shutil
-import sys
 
 import pytest
 from python3_wtf.plugins.plugin import Plugin
 import python3_wtf.plugin_manager
 from common_test_functions import PluginStub, BadPluginStub, UnapplicablePluginStub
 
+
 class TestPluginFinder:
     def test_fetch_plugins(self):
-        def mock_import_plugins(plugins_package_directory_path=None, base_class=None, create_instance=True, filter_abstract=True):
+        def mock_import_plugins(
+            plugins_package_directory_path=None,
+            base_class=None,
+            create_instance=True,
+            filter_abstract=True
+        ):
             return [PluginStub, BadPluginStub, UnapplicablePluginStub]
         mock_import = pytest.MonkeyPatch()
-        mock_import.setattr(python3_wtf.plugin_manager, "import_plugins", mock_import_plugins)
+        mock_import.setattr(
+            python3_wtf.plugin_manager,
+            "import_plugins",
+            mock_import_plugins
+        )
         x = python3_wtf.plugin_manager.PluginManager(None)
         assert x.plugins_detected == [PluginStub, BadPluginStub, UnapplicablePluginStub]
 
     def test_applicable_plugins(self):
-        def mock_import_plugins(plugins_package_directory_path=None, base_class=None, create_instance=True, filter_abstract=True):
+        def mock_import_plugins(
+            plugins_package_directory_path=None,
+            base_class=None,
+            create_instance=True,
+            filter_abstract=True
+        ):
             return [PluginStub, BadPluginStub, UnapplicablePluginStub]
         mock_import = pytest.MonkeyPatch()
-        mock_import.setattr(python3_wtf.plugin_manager, "import_plugins", mock_import_plugins)
+        mock_import.setattr(
+            python3_wtf.plugin_manager,
+            "import_plugins",
+            mock_import_plugins
+        )
         x = python3_wtf.plugin_manager.PluginManager(None)
         for plugin in x.applicable_plugins:
             assert isinstance(plugin, (PluginStub, BadPluginStub))
 
     def test_no_applicable_plugins(self):
-        def mock_import_plugins(plugins_package_directory_path=None, base_class=None, create_instance=True, filter_abstract=True):
+        def mock_import_plugins(
+            plugins_package_directory_path=None,
+            base_class=None,
+            create_instance=True,
+            filter_abstract=True
+        ):
             return []
         mock_import = pytest.MonkeyPatch()
-        mock_import.setattr(python3_wtf.plugin_manager, "import_plugins", mock_import_plugins)
+        mock_import.setattr(
+            python3_wtf.plugin_manager,
+            "import_plugins",
+            mock_import_plugins
+        )
         x = python3_wtf.plugin_manager.PluginManager(None)
         assert x.applicable_plugins == []
 

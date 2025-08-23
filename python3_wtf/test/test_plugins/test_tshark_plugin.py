@@ -12,10 +12,18 @@ class TestTsharkPlugin(unittest.TestCase):
     @patch("os.getgroups")
     @patch("grp.getgrgid")
     @patch("os.geteuid")
-    def test_is_applicable_true_when_in_group(self, mock_geteuid, mock_getgrgid, mock_getgroups, mock_exists):
+    def test_is_applicable_true_when_in_group(
+        self,
+        mock_geteuid,
+        mock_getgrgid,
+        mock_getgroups,
+        mock_exists
+    ):
         # Setup mocks for group membership
         mock_getgroups.return_value = [1000, 1001]
-        mock_getgrgid.side_effect = lambda gid: MagicMock(gr_name="wireshark" if gid == 1000 else "othergroup")
+        mock_getgrgid.side_effect = lambda gid: MagicMock(
+            gr_name="wireshark" if gid == 1000 else "othergroup"
+        )
         mock_geteuid.return_value = 1001  # non-root user
 
         applicable = self.plugin.is_applicable()
@@ -25,7 +33,13 @@ class TestTsharkPlugin(unittest.TestCase):
     @patch("os.getgroups")
     @patch("grp.getgrgid")
     @patch("os.geteuid")
-    def test_is_applicable_true_when_root(self, mock_geteuid, mock_getgrgid, mock_getgroups, mock_exists):
+    def test_is_applicable_true_when_root(
+        self,
+        mock_geteuid,
+        mock_getgrgid,
+        mock_getgroups,
+        mock_exists
+    ):
         mock_getgroups.return_value = []
         mock_getgrgid.side_effect = lambda gid: MagicMock(gr_name="nogroup")
         mock_geteuid.return_value = 0  # root user
@@ -37,7 +51,13 @@ class TestTsharkPlugin(unittest.TestCase):
     @patch("os.getgroups")
     @patch("grp.getgrgid")
     @patch("os.geteuid")
-    def test_is_applicable_false_when_no_path(self, mock_geteuid, mock_getgrgid, mock_getgroups, mock_exists):
+    def test_is_applicable_false_when_no_path(
+        self,
+        mock_geteuid,
+        mock_getgrgid,
+        mock_getgroups,
+        mock_exists
+    ):
         # Even if groups or root, missing tshark binary disables applicability
         mock_getgroups.return_value = [1000]
         mock_getgrgid.return_value = MagicMock(gr_name="wireshark")

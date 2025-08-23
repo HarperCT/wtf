@@ -1,7 +1,7 @@
 import json
 import os
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from click.testing import CliRunner
 from pathlib import Path
 from python3_wtf.wtf_cli import cli
@@ -14,6 +14,7 @@ TEST_SETTINGS_FILE = {
         {"tshark": ["-i", "enp0s3"]}
     ]
 }
+
 
 class TestCli(unittest.TestCase):
     def setUp(self):
@@ -30,7 +31,10 @@ class TestCli(unittest.TestCase):
             result = self.runner.invoke(cli, ['-t', '3', '-o', str(tmp_dir)])
             assert result.exit_code == 0
             assert "[WheresTheFault] Initializing WheresTheFault..." in result.output
-            assert f"[WheresTheFault] Running with timeout=3, output_dir='{tmp_dir.resolve()}' and plugin_args=None" in result.output
+            assert (
+                f"[WheresTheFault] Running with timeout=3, "
+                f"output_dir='{tmp_dir.resolve()}' and plugin_args=None"
+            ) in result.output
             assert "[WheresTheFault] Done." in result.output
             assert self.mock_instance.main_runner.called
 
@@ -40,7 +44,10 @@ class TestCli(unittest.TestCase):
             tmp_dir.mkdir()
             result = self.runner.invoke(cli, ['-o', str(tmp_dir)])
             assert result.exit_code != 0
-            assert "Missing required parameters: 'timeout' and/or 'output_dir' must be set either in the CLI or .json.\n" in result.output
+            assert (
+                "Missing required parameters: 'timeout' and/or 'output_dir' "
+                "must be set either in the CLI or .json.\n"
+            ) in result.output
             assert not self.mock_instance.main_runner.called
 
     def test_cli_invalid_timeout(self):
@@ -78,7 +85,10 @@ class TestCli(unittest.TestCase):
                 '-p', 'pluginB', '["one", "two", "three"]'
             ])
             assert result.exit_code == 0
-            assert "plugin_args=[('pluginA', 'x', 'y'), ('pluginB', 'one', 'two', 'three')]" in result.output
+            assert (
+                "plugin_args=[('pluginA', 'x', 'y'), "
+                "('pluginB', 'one', 'two', 'three')]"
+            ) in result.output
             assert self.mock_instance.main_runner.called
 
     def test_plugin_with_bad_format_raises(self):
@@ -89,7 +99,10 @@ class TestCli(unittest.TestCase):
                 '-p', 'bad_plugin', '"{not: a list}"'
             ])
             assert result.exit_code != 0
-            assert 'Invalid value: Plugin args must be a valid list or a space-separated string' in result.output
+            assert (
+                'Invalid value: Plugin args must be a valid list or '
+                'a space-separated string'
+            ) in result.output
             assert not self.mock_instance.main_runner.called
 
     def test_valid_settings_file(self):
@@ -107,14 +120,19 @@ class TestCli(unittest.TestCase):
                 f.write(json.dumps(settings_json))
             result = self.runner.invoke(cli, ['--settings', test_settings_file])
             assert result.exit_code == 0
-            assert "Using settings" in result.output or "Running with timeout=" in result.output
-    
+            assert (
+                "Using settings" in result.output
+                or "Running with timeout=" in result.output
+            )
+
     def test_invalid_settings_file_json(self):
         with self.runner.isolated_filesystem() as dir:
             settings_path = os.path.join(dir, "bad_settings.json")
             with open(settings_path, "w") as f:
-                f.write('{"timeout": 5, "output_dir": "output", plugins: [}')  # malformed JSON
-
+                f.write(
+                    '{"timeout": 5, "output_dir": "output", '
+                    'plugins: [}'  # malformed JSON
+                )
             result = self.runner.invoke(cli, ['--settings', settings_path])
             assert result.exit_code != 0
             assert "Invalid JSON in settings file" in result.output

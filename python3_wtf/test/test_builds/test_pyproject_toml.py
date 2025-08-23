@@ -5,6 +5,7 @@ import subprocess
 import sys
 import venv
 
+
 class TestPython3WTFBuild(unittest.TestCase):
     PROJECT_DIR = pathlib.Path("python3_wtf/src")
 
@@ -24,8 +25,14 @@ class TestPython3WTFBuild(unittest.TestCase):
             self.assertIsNotNone(sdist, "No sdist file found")
 
     def test_package_installation(self):
-        """Test that the built wheel can be installed in a temporary venv."""
-        with tempfile.TemporaryDirectory() as tmpdir, tempfile.TemporaryDirectory() as venv_dir:
+        """
+            Test that the built wheel can be installed
+            in a temporary venv.
+        """
+        with (
+            tempfile.TemporaryDirectory() as tmpdir,
+            tempfile.TemporaryDirectory() as venv_dir
+        ):
             build_dir = pathlib.Path(tmpdir)
             subprocess.run(
                 [sys.executable, "-m", "build", "--outdir", str(build_dir)],
@@ -47,7 +54,10 @@ class TestPython3WTFBuild(unittest.TestCase):
 
     def test_cli_runs(self):
         """Test that CLI entry points work in a clean environment."""
-        with tempfile.TemporaryDirectory() as tmpdir, tempfile.TemporaryDirectory() as venv_dir:
+        with (
+            tempfile.TemporaryDirectory() as tmpdir,
+            tempfile.TemporaryDirectory() as venv_dir
+        ):
             build_dir = pathlib.Path(tmpdir)
             subprocess.run(
                 [sys.executable, "-m", "build", "--outdir", str(build_dir)],
