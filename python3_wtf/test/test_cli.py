@@ -1,8 +1,8 @@
 import json
 import os
 import unittest
-from unittest.mock import patch
 from click.testing import CliRunner
+from unittest.mock import patch
 from pathlib import Path
 from python3_wtf.wtf_cli import cli
 

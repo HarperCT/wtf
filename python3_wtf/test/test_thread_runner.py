@@ -1,8 +1,9 @@
+import unittest
 from python3_wtf.thread_runner import ThreadRunner
 from common_test_functions import PluginStub, BadPluginStub
 
 
-class TestThreadRunner:
+class TestThreadRunner(unittest.TestCase):
 
     def test_runs_multiple_threads(self):
         plugins = [PluginStub(), PluginStub(), PluginStub()]

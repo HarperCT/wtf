@@ -1,5 +1,6 @@
-from python3_wtf.plugins.plugin import Plugin
 import time
+
+from python3_wtf.plugins.plugin import Plugin
 
 
 class PluginStub(Plugin):

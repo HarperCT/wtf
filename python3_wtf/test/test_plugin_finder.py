@@ -1,14 +1,15 @@
-import tempfile
 import os
-import shutil
-
 import pytest
+import shutil
+import tempfile
+import unittest
+
+from common_test_functions import PluginStub, BadPluginStub, UnapplicablePluginStub
 from python3_wtf.plugins.plugin import Plugin
 import python3_wtf.plugin_manager
-from common_test_functions import PluginStub, BadPluginStub, UnapplicablePluginStub
 
 
-class TestPluginFinder:
+class TestPluginFinder(unittest.TestCase):
     def test_fetch_plugins(self):
         def mock_import_plugins(
             plugins_package_directory_path=None,
