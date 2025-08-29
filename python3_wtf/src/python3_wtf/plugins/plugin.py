@@ -33,7 +33,7 @@ class Plugin(abc.ABC):
         """
             Add plugin_args defined in cli (or elsewhere...) into the plugin,
         """
-        NotImplementedError("Plugin does not support configuration. \
+        raise NotImplementedError("Plugin does not support configuration. \
                             We should never have reached here. \
                             Please contanct maintainer")
 
