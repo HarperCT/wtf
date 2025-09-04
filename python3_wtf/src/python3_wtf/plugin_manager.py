@@ -44,17 +44,20 @@ class PluginManager:
             instance = plugin_cls()
             if instance.is_applicable():
                 # Add default instance only if it's not already present
-                if not instance.is_configurable and \
-                   not instance.is_multirunable:
+                if (not instance.is_configurable and
+                   not instance.is_multirunable):
                     self.applicable_plugins.append(instance)
                     logger.info(
-                        f"Added non-configurable plugin: \
-                        {instance.__class__.__name__}.")
+                        "Added non-configurable plugin: "
+                        "{instance.__class__.__name__}."
+                    )
                 elif instance.is_configurable and not self.plugins_args:
-                    logger.info(f"Not adding {instance.__class__.__name__} \
-                                as it needs to be configured with \
-                                plugin_args. Consider adding some \
-                                to get this plugin.")
+                    logger.info(
+                        f"Not adding {instance.__class__.__name__}  "
+                        "as it needs to be configured with "
+                        "plugin_args. Consider adding some "
+                        "to get this plugin."
+                    )
 
     def instantiate_plugins_from_args(self):
         for plugin_args in self.plugins_args:
@@ -71,49 +74,59 @@ class PluginManager:
                     break
 
             if matched_class is None:
-                logger.warning(f"No plugin instance found matching \
-                               '{plugin_name}', skipping.")
+                logger.warning(
+                    f"No plugin instance found matching "
+                    f"'{plugin_name}', skipping."
+                )
                 continue
 
             plugin_instance: Plugin = matched_class()
 
             if not isinstance(plugin_instance, Plugin):
-                logger.debug("I'll be shocked if we ever hit this, \
-                             but typing is having a hissy... \
-                             if we do report me!")
+                logger.debug(
+                    "I'll be shocked if we ever hit this, "
+                    "but typing is having a hissy... "
+                    "if we do report me!"
+                )
                 continue
 
             if not plugin_instance.is_applicable():
-                logger.warning(f"Plugin \
-                               '{plugin_instance.__class__.__name__}' \
-                               not applicable, skipping.")
+                logger.warning(
+                    f"Plugin '{plugin_instance.__class__.__name__}'"
+                    "not applicable, skipping."
+                )
                 continue
 
             if not plugin_instance.is_configurable:
-                logger.warning(f"Plugin \
-                               '{plugin_instance.__class__.__name__}' \
-                               not configurable, you should remove it \
-                               from your plugin_args, skipping.")
+                logger.warning(
+                    f"Plugin '{plugin_instance.__class__.__name__}' "
+                    "not configurable, you should remove it "
+                    "from your plugin_args, skipping."
+                )
                 continue
 
             if not plugin_instance.is_multirunable:
                 already_exists = any(
-                    isinstance(existing, plugin_instance)
+                    isinstance(existing, type(plugin_instance))
                     for existing in self.applicable_plugins
                 )
                 if already_exists:
-                    logger.warning(f"Plugin '{plugin_name}' is not \
-                                   multi-runnable and already \
-                                   instantiated. Skipping duplicate.")
+                    logger.warning(
+                        f"Plugin '{plugin_name}' is not "
+                        "multi-runnable and already "
+                        "instantiated. Skipping duplicate."
+                    )
                     continue
 
             if plugin_instance.is_configurable:
                 plugin_instance.configure_args([*plugin_params])
             else:
                 if plugin_params:
-                    logger.warning(f"Plugin '{plugin_name}' is not \
-                                   configurable but received args. \
-                                   Ignoring args.")
+                    logger.warning(
+                        f"Plugin '{plugin_name}' is not "
+                        "configurable but received args."
+                        "Ignoring args."
+                    )
 
             self.applicable_plugins.append(plugin_instance)
             logger.info(f"Instantiated plugin: \
@@ -145,8 +158,10 @@ def import_plugins(
         module_name = os.path.splitext(plugin_file_name)[0]
 
         if module_name.startswith("__"):
-            logger.debug(f"Found module but not processing associated \
-                         plugins: {module_name}")
+            logger.debug(
+                "Found module but not processing associated "
+                "plugins: {module_name}"
+            )
             continue
 
         # -----------------------------
@@ -173,7 +188,7 @@ def import_plugins(
                 continue
 
             if base_class is not None:
-                if type(value) is not type(base_class):
+                if not issubclass(value, base_class):
                     continue
 
             # -----------------------------
