@@ -1,10 +1,11 @@
+import click
 import json
 import os
 import unittest
-from unittest.mock import patch
 from click.testing import CliRunner
+from unittest.mock import patch
 from pathlib import Path
-from python3_wtf.wtf_cli import cli
+from python3_wtf.wtf_cli import cli, parse_plugins, parse_plugins_from_json
 
 TEST_SETTINGS_FILE = {
     "timeout": 5,
@@ -155,3 +156,34 @@ class TestCli(unittest.TestCase):
             result = self.runner.invoke(cli, ['--settings', settings_path])
             assert result.exit_code != 0
             assert "Missing required parameters" in result.output
+
+    def test_help_settings(self):
+        result = self.runner.invoke(cli, ['--help-settings'])
+        self.assertIn("JSON Settings Format Example:", result.output)
+
+    def test_help_plugins(self):
+        result = self.runner.invoke(cli, ['--help-plugins'])
+        self.assertIn("Plugin Argument Formats:", result.output)
+
+    def test_parse_plugins_from_json_args_not_list(self):
+        plugins = [{"plugin1": "not a list"}]
+        with self.assertRaises(click.BadParameter) as err:
+            parse_plugins_from_json(plugins)
+        self.assertIn("Plugin args for 'plugin1' must be a list", str(err.exception))
+
+    def test_parse_plugins_if_not_dict_like_string(self):
+        plugins = [("plugin1", "foo bar baz")]
+        result = parse_plugins(plugins)
+        self.assertEqual(result, [("plugin1", "foo", "bar", "baz")])
+
+    def test_raises_when_entry_not_dict(self):
+        plugins = ["notadict"]
+        with self.assertRaises(click.BadParameter) as cm:
+            parse_plugins_from_json(plugins)
+        self.assertIn("Invalid plugin entry: notadict.", str(cm.exception))
+
+    def test_raises_when_entry_has_multiple_keys(self):
+        plugins = [{"plugin1": [], "plugin2": []}]
+        with self.assertRaises(click.BadParameter) as cm:
+            parse_plugins_from_json(plugins)
+        self.assertIn("must be a single-key object", str(cm.exception))

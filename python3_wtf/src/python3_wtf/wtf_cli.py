@@ -66,12 +66,17 @@ def parse_plugins_from_json(plugin_dicts: dict) -> list[tuple[str, ...]]:
     plugin_args = []
     for plugin_entry in plugin_dicts:
         if not isinstance(plugin_entry, dict) or len(plugin_entry) != 1:
-            raise click.BadParameter(f"Each plugin in the JSON must be a \
-                                     single-key object, got: {plugin_entry}")
+            raise click.BadParameter(
+                f"Invalid plugin entry: {plugin_entry}. "
+                "Each plugin must be a single-key object.",
+                param_hint="plugins"
+            )
         for name, args in plugin_entry.items():
             if not isinstance(args, list):
-                raise click.BadParameter(f"Plugin args must be a list for \
-                                         plugin '{name}', got: {args}")
+                raise click.BadParameter(
+                    f"Plugin args for '{name}' must be a list, got: {args}",
+                    param_hint="plugins"
+                )
             plugin_args.append((name, *args))
     return plugin_args
 

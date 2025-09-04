@@ -25,7 +25,7 @@ class WheresTheFault:
     def main_runner(self):
         plugin_detector = PluginManager(self.plugin_args)
         if plugin_detector.applicable_plugins == []:
-            Exception("No applicable plugins! Try download some!")
+            raise Exception("No applicable plugins! Try download some!")
 
         runner = ThreadRunner(
             timeout=self.timeout,
