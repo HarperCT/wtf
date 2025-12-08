@@ -1,5 +1,5 @@
 import logging
-from python3_wtf.thread_runner import ThreadRunner
+from python3_wtf.async_runner import AsyncRunner
 from python3_wtf.plugin_manager import PluginManager
 from python3_wtf.package_outputs import archive_outputs
 from pathlib import Path
@@ -24,12 +24,14 @@ class WheresTheFault:
 
     def main_runner(self):
         plugin_detector = PluginManager(self.plugin_args)
-        if plugin_detector.applicable_plugins == []:
+        if not plugin_detector.applicable_plugins:
             raise Exception("No applicable plugins! Try download some!")
 
-        runner = ThreadRunner(
+        runner = AsyncRunner(
             timeout=self.timeout,
             plugins=plugin_detector.applicable_plugins)
         outputs = runner.run_threads()
 
-        archive_outputs(outputs, "/tmp")
+        # Use the user-specified output directory
+        archive_path = archive_outputs(outputs, self.output_dir)
+        logger.info(f"Results archived to: {archive_path}")
