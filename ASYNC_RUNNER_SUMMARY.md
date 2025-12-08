@@ -65,7 +65,11 @@ results = runner.run_plugins()
 
 ### Architecture
 
-1. **Semaphore Control**: Limits concurrent subprocess execution (default: 8)
+1. **Smart Semaphore Control**: Auto-scales with CPU (cpu_count × 3, max 32)
+   - 4-core system: 12 concurrent subprocesses
+   - 8-core system: 24 concurrent subprocesses
+   - 16-core system: 32 concurrent subprocesses
+   - Configurable: Set custom limit or "unlimited" mode
 2. **Executor Pattern**: Runs sync `plugin.run()` in thread pool executor
 3. **Gather Pattern**: Collects all results concurrently using `asyncio.gather()`
 4. **Timeout Protection**: Per-plugin and overall timeout handling

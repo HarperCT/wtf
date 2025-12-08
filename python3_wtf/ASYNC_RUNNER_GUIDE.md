@@ -90,12 +90,45 @@ outputs = runner.run_plugins()
 ### Concurrency Control
 
 ```python
+# Default: Auto-scales with CPU count (cpu_count * 3, max 32)
 runner = AsyncRunner(timeout=5.0, plugins=plugins)
+# On 4-core: limit=12, on 8-core: limit=24, on 16-core: limit=32
 
-# Adjust concurrent subprocess limit (default: 8)
-runner.semaphore_limit = 4  # More conservative
-runner.semaphore_limit = 16  # More aggressive
+# Custom limit
+runner = AsyncRunner(timeout=5.0, plugins=plugins, max_concurrent=16)
+
+# Conservative (good for weak systems)
+runner = AsyncRunner(timeout=5.0, plugins=plugins, max_concurrent=4)
+
+# Aggressive (good for powerful systems)
+runner = AsyncRunner(timeout=5.0, plugins=plugins, max_concurrent=64)
+
+# "Unlimited" - runs all plugins simultaneously (use with caution!)
+runner = AsyncRunner(timeout=5.0, plugins=plugins, max_concurrent=0)
+# Warning: This spawns N subprocesses at once, may overwhelm system
 ```
+
+### Why We Still Need Limits
+
+Even though asyncio coroutines are lightweight (~1KB), each plugin spawns a **real subprocess**:
+
+```
+50 plugins with no limit:
+  ✅ 50 coroutines = ~50KB memory (great!)
+  ⚠️  50 subprocesses = high CPU/IO load (problematic!)
+```
+
+**The limit prevents:**
+- CPU saturation from too many processes
+- I/O bottlenecks (all reading /proc simultaneously)
+- System instability (tools like lsof can lock resources)
+- Context switching overhead
+
+**Recommended limits:**
+- **Weak system (2-4 cores)**: 4-8 concurrent
+- **Normal system (4-8 cores)**: 12-24 concurrent (default)
+- **Powerful system (16+ cores)**: 32-64 concurrent
+- **Unlimited**: Only if you know your plugins are very lightweight
 
 ### When to Use Each Runner
 
@@ -110,6 +143,37 @@ runner.semaphore_limit = 16  # More aggressive
 - Need simpler debugging
 - Compatibility with older Python (< 3.7)
 - Plugins have complex thread-local state
+
+### When to Use Unlimited Concurrency
+
+**Safe to use unlimited (max_concurrent=0) when:**
+- Plugins are very lightweight (like `uname`, `hostname`)
+- Running on a powerful system (16+ cores)
+- Plugins don't compete for same resources
+- You've tested and monitored system load
+
+**NOT safe when:**
+- Plugins include heavy tools (`lsof`, `top`, `tcpdump`)
+- Running on weak/embedded systems
+- Plugins access same files/resources
+- You haven't tested with your specific plugin set
+
+**Example - Lightweight plugins only:**
+```python
+# These are safe to run unlimited
+lightweight_plugins = [
+    UnamePlugin(), HostnamePlugin(), UptimePlugin(),
+    DfPlugin(), FreePlugin()
+]
+runner = AsyncRunner(5.0, lightweight_plugins, max_concurrent=0)
+
+# These should be limited
+heavy_plugins = [
+    LsofPlugin(), TopPlugin(), TsharkPlugin(),
+    TcpdumpPlugin(), StracePlugin()
+]
+runner = AsyncRunner(5.0, heavy_plugins, max_concurrent=8)
+```
 
 ## Performance Examples
 

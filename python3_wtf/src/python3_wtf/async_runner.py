@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 from python3_wtf.plugins.plugin import Plugin
 
 logger = logging.getLogger(__name__)
@@ -15,12 +16,38 @@ class AsyncRunner:
     - No GIL contention
     - Better suited for I/O-bound subprocess operations
     - Safer - no race conditions or locks needed
+    
+    Note: The semaphore limit controls concurrent SUBPROCESSES, not memory.
+    Even though asyncio is lightweight, each plugin spawns a real subprocess
+    which can strain CPU/IO. The limit prevents subprocess explosion.
     """
     
-    def __init__(self, timeout: float, plugins: list[Plugin]):
+    def __init__(
+        self,
+        timeout: float,
+        plugins: list[Plugin],
+        max_concurrent: int | None = None
+    ):
         self.timeout = timeout
         self.plugins = plugins
-        self.semaphore_limit = 8  # Limit concurrent subprocesses
+        
+        # Smart default: scale with CPU count but cap reasonably
+        if max_concurrent is None:
+            cpu_count = os.cpu_count() or 4
+            # More aggressive than ThreadRunner since asyncio is more efficient
+            # Formula: 3x CPU count, capped at 32
+            # Why limit? Memory is fine (1KB per coroutine), but each plugin
+            # spawns a REAL subprocess which can saturate CPU/IO
+            # Examples: 4-core=12, 8-core=24, 16-core=32
+            self.semaphore_limit = min(cpu_count * 3, 32)
+        else:
+            # Allow custom limit, including 0 for "unlimited" (with warning)
+            self.semaphore_limit = max_concurrent
+        
+        logger.debug(
+            f"AsyncRunner initialized with {len(plugins)} plugins, "
+            f"max_concurrent={self.semaphore_limit}"
+        )
     
     async def run_plugin_async(
         self,
@@ -75,7 +102,16 @@ class AsyncRunner:
             List of (plugin_name, (stdout, stderr, timed_out)) tuples
         """
         # Semaphore limits concurrent subprocess execution
-        semaphore = asyncio.Semaphore(self.semaphore_limit)
+        # Use a very high limit if user wants "unlimited" (not truly unlimited)
+        if self.semaphore_limit <= 0:
+            logger.warning(
+                "Running with unlimited concurrency! "
+                "This may spawn many subprocesses simultaneously. "
+                f"Consider setting a limit (recommended: {os.cpu_count() * 3})"
+            )
+            semaphore = asyncio.Semaphore(len(self.plugins))
+        else:
+            semaphore = asyncio.Semaphore(self.semaphore_limit)
         
         # Create tasks for all plugins
         tasks = [
@@ -148,11 +184,10 @@ class AsyncRunnerAdvanced(AsyncRunner):
         self,
         timeout: float,
         plugins: list[Plugin],
-        max_concurrent: int = 8,
+        max_concurrent: int | None = None,
         adaptive: bool = True
     ):
-        super().__init__(timeout, plugins)
-        self.semaphore_limit = max_concurrent
+        super().__init__(timeout, plugins, max_concurrent)
         self.adaptive = adaptive
         self.completed_count = 0
     
